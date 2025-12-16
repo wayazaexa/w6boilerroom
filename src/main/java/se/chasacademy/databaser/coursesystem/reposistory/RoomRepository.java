@@ -6,5 +6,6 @@ import se.chasacademy.databaser.coursesystem.entities.Room;
 import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
+    List<Room> findByCapacityGreaterThan(int capacity);
 }
 

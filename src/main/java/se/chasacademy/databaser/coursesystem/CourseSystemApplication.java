@@ -1,5 +1,6 @@
 package se.chasacademy.databaser.coursesystem;
 
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +9,8 @@ import se.chasacademy.databaser.coursesystem.reposistory.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class CourseSystemApplication implements CommandLineRunner {
@@ -34,6 +37,7 @@ public class CourseSystemApplication implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) {
         //1. Skapar grunddata
         //- 1–2 lärare
@@ -80,9 +84,10 @@ public class CourseSystemApplication implements CommandLineRunner {
         //- Koppla varje session till en `Course` och en `Room`
         //- Ange datum i framtiden / dåtid
         CourseSession courseSession1 = new CourseSession(LocalDateTime.of(2025, 12, 16, 11, 0), course1, room1);
-        CourseSession courseSession2 = new CourseSession(LocalDateTime.of(2025, 12, 16, 13, 0), course2, room1);
-        CourseSession courseSession3 = new CourseSession(LocalDateTime.of(2025, 12, 16, 15, 0), course3, room2);
-        courseSessionRepository.saveAll(List.of(courseSession1, courseSession2, courseSession3));
+        CourseSession courseSession2 = new CourseSession(LocalDateTime.of(2025, 12, 17, 13, 0), course2, room1);
+        CourseSession courseSession3 = new CourseSession(LocalDateTime.of(2025, 12, 17, 15, 0), course3, room2);
+        CourseSession courseSession4 = new CourseSession(LocalDateTime.of(2025, 12, 17, 15, 0), course1, room1);
+        courseSessionRepository.saveAll(List.of(courseSession1, courseSession2, courseSession3, courseSession4));
 
         //3. Testar constraints
         //- Försök skapa:
@@ -103,7 +108,8 @@ public class CourseSystemApplication implements CommandLineRunner {
         //- Skriv ut:
         //- Kurser med lärare
         System.out.println();
-        List<Course> courses = courseRepository.findAllWithTeacher();
+        System.out.println("Kurser med lärare:");
+        List<Course> courses = courseRepository.findAll();
         if (courses.isEmpty()) {
             System.out.println("Inga kurser hittades.");
         }
@@ -116,14 +122,15 @@ public class CourseSystemApplication implements CommandLineRunner {
 
         //- Kurser med antal deltagare
         System.out.println();
-        List<Course> coursesParticipants = courseRepository.findAllWithParticipants();
+        System.out.println("Kurser med antal deltagare (och deltagare):");
+        List<Course> coursesParticipants = courseRepository.findAll();
         if (courses.isEmpty()) {
             System.out.println("Inga kurser hittades.");
         }
         else {
             for (Course course : coursesParticipants) {
                 System.out.println("Kurs - Id: " + course.getId() + ", namn: " + course.getTitle()
-                        + ", deltagare: ");
+                        + ", antal deltagare: " + course.getParticipants().size() + ", deltagare: ");
                 for (Participant participant : course.getParticipants()) {
                     System.out.println("  Name: " + participant.getFullName() + ", email: " + participant.getEmail());
                 }
@@ -131,11 +138,29 @@ public class CourseSystemApplication implements CommandLineRunner {
         }
 
         //- Kommande kurstillfällen per lokal
-        // Probably best done with CriteriaBuilder to make subquery
+        System.out.println();
+        System.out.println("Kommande kurstillfällen per lokal:");
+        List<CourseSession> courseSessions = courseSessionRepository.findByDateAfter(LocalDateTime.now());
+        if (courseSessions.isEmpty()) {
+            System.out.println("Inga kurstillfällen hittades");
+        }
+        else {
+            for (Map.Entry<Room, List<CourseSession>> csEntry : courseSessions.stream()
+                    .collect(Collectors.groupingBy(CourseSession::getRoom))
+                    .entrySet()
+                    .stream().toList()) {
+                System.out.println("Rum: " + csEntry.getKey().getName());
+                for (CourseSession cs : csEntry.getValue()) {
+                    System.out.println("Kurstillfälle - Kurs: " + cs.getCourse().getTitle() + ", tid: " + cs.getDate());
+                }
+            }
+        }
 
         //- Lokaler med capacity > X
         System.out.println();
-        List<Room> rooms = roomRepository.findByCapacityGreaterThan(25);
+        int capacity = 25;
+        System.out.println("Lokaler med kapacitet > " + capacity);
+        List<Room> rooms = roomRepository.findByCapacityGreaterThan(capacity);
         if (rooms.isEmpty()) {
             System.out.println("Inga rum hittades.");
         }

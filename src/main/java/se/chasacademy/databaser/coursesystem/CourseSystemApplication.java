@@ -115,6 +115,20 @@ public class CourseSystemApplication implements CommandLineRunner {
         }
 
         //- Kurser med antal deltagare
+        System.out.println();
+        List<Course> coursesParticipants = courseRepository.findAllWithParticipants();
+        if (courses.isEmpty()) {
+            System.out.println("Inga kurser hittades.");
+        }
+        else {
+            for (Course course : coursesParticipants) {
+                System.out.println("Kurs - Id: " + course.getId() + ", namn: " + course.getTitle()
+                        + ", deltagare: ");
+                for (Participant participant : course.getParticipants()) {
+                    System.out.println("  Name: " + participant.getFullName() + ", email: " + participant.getEmail());
+                }
+            }
+        }
 
         //- Kommande kurstillfällen per lokal
 

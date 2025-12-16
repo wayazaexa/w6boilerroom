@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class Participant {
     private String email;
 
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
-    Set<Course> courses;
+    Set<Course> courses = new HashSet<>();
 
     public Participant() {}
 

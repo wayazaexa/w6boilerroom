@@ -18,7 +18,7 @@ public class Participant {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
     Set<Course> courses;
 
     public Participant() {}

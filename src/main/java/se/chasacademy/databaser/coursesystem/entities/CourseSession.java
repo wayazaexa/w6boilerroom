@@ -1,6 +1,7 @@
 package se.chasacademy.databaser.coursesystem.entities;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,7 @@ public class CourseSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     @Column(nullable = false)
     private LocalDateTime date;
 

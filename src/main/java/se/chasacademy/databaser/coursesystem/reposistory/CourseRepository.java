@@ -2,10 +2,12 @@ package se.chasacademy.databaser.coursesystem.reposistory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import se.chasacademy.databaser.coursesystem.entities.Course;
 
 import java.util.List;
 
+@Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     // Find courses with teacher
     @Query("select c from Course c join fetch c.teacher")

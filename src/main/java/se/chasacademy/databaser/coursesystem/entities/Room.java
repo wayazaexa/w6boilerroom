@@ -20,7 +20,7 @@ public class Room {
     @Min(1)
     private int capacity;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     List<CourseSession> sessions;
 
     public Room() {}

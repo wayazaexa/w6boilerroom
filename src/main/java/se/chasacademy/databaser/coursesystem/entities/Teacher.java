@@ -24,7 +24,7 @@ public class Teacher {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     List<Course> courses = new ArrayList<>();
 
     public Teacher() {}

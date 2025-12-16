@@ -29,7 +29,7 @@ public class Course {
     @Column(nullable = false)
     private int maxParticipants;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER) // Lazy load caused issue with first query
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 

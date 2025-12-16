@@ -103,7 +103,7 @@ public class CourseSystemApplication implements CommandLineRunner {
         //- Skriv ut:
         //- Kurser med lärare
         System.out.println();
-        List<Course> courses = courseRepository.findAll();
+        List<Course> courses = courseRepository.findAllWithTeacher();
         if (courses.isEmpty()) {
             System.out.println("Inga kurser hittades.");
         }

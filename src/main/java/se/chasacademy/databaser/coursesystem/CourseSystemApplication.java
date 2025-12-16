@@ -131,8 +131,19 @@ public class CourseSystemApplication implements CommandLineRunner {
         }
 
         //- Kommande kurstillfällen per lokal
+        // Probably best done with CriteriaBuilder to make subquery
 
         //- Lokaler med capacity > X
-
+        System.out.println();
+        List<Room> rooms = roomRepository.findByCapacityGreaterThan(25);
+        if (rooms.isEmpty()) {
+            System.out.println("Inga rum hittades.");
+        }
+        else {
+            for (Room room : rooms) {
+                System.out.println("Rum - Id: " + room.getId() + ", namn: " + room.getName()
+                        + ", adress: " + room.getAddress() + ", kapacitet: " + room.getCapacity());
+            }
+        }
     }
 }

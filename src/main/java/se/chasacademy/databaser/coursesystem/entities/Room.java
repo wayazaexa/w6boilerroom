@@ -1,6 +1,7 @@
 package se.chasacademy.databaser.coursesystem.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 import java.util.List;
 

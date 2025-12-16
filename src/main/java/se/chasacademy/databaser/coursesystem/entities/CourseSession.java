@@ -11,7 +11,6 @@ public class CourseSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @org.jetbrains.annotations.NotNull
     @Column(nullable = false)
     private LocalDateTime date;
 
